@@ -5,10 +5,10 @@ import java.util.Optional;
 import money.account.models.Account;
 import money.store.AccountStore;
 
-public class AccountRepositoryImpl implements AccountRepository {
+public class AccountRepositoryInMemory implements AccountRepository {
   private final AccountStore accountStore;
 
-  public AccountRepositoryImpl(AccountStore accountStore) {
+  public AccountRepositoryInMemory(AccountStore accountStore) {
     this.accountStore = accountStore;
   }
 

@@ -3,7 +3,7 @@ package revolut.backend.test;
 import money.MonetaryAmount;
 import money.account.models.Account;
 import money.account.repositories.AccountRepository;
-import money.account.repositories.AccountRepositoryImpl;
+import money.account.repositories.AccountRepositoryInMemory;
 import money.account.services.AccountService;
 import money.account.services.AccountServiceImpl;
 import money.exceptions.AccountNotFoundException;
@@ -14,7 +14,7 @@ import money.store.AccountStore;
 import money.store.TransactionEntriesByAccountStore;
 import money.transaction.models.Transaction;
 import money.transaction.repositories.TransactionRepository;
-import money.transaction.repositories.TransactionRepositoryImpl;
+import money.transaction.repositories.TransactionRepositoryInMemory;
 
 import static spark.Spark.*;
 
@@ -32,13 +32,13 @@ import org.slf4j.LoggerFactory;
 
 public class WebServer {
   private static AccountStore accountStore = new AccountStore();
-  private static AccountRepository accountRepository = new AccountRepositoryImpl(accountStore);
+  private static AccountRepository accountRepository = new AccountRepositoryInMemory(accountStore);
   private static TransactionEntriesByAccountStore transactionEntriesByAccountStore = new TransactionEntriesByAccountStore();
-  private static TransactionRepository transactionRepository = new TransactionRepositoryImpl(transactionEntriesByAccountStore);
+  private static TransactionRepository transactionRepository = new TransactionRepositoryInMemory(transactionEntriesByAccountStore);
   private static AccountService accountService = new AccountServiceImpl(accountRepository, transactionRepository);
   private static Logger logger = LoggerFactory.getLogger(WebServer.class);
 
-	public void start(Integer port) {
+  public void start(Integer port) {
     logger.info("Web server started on port " + port);
 
     port(port);

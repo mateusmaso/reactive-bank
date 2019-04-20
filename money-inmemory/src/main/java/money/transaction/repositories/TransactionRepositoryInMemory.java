@@ -9,10 +9,10 @@ import money.store.TransactionEntriesByAccountStore;
 import money.transaction.models.Transaction;
 import money.transaction.models.TransactionEntry;
 
-public class TransactionRepositoryImpl implements TransactionRepository {
+public class TransactionRepositoryInMemory implements TransactionRepository {
   private final TransactionEntriesByAccountStore transactionEntriesByAccountStore;
 
-  public TransactionRepositoryImpl(TransactionEntriesByAccountStore transactionEntriesByAccountStore) {
+  public TransactionRepositoryInMemory(TransactionEntriesByAccountStore transactionEntriesByAccountStore) {
     this.transactionEntriesByAccountStore = transactionEntriesByAccountStore;
   }
 

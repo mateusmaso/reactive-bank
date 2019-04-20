@@ -1,2 +1,3 @@
 rootProject.name = "revolut-backend-test"
 include 'money'
+include 'money-inmemory'

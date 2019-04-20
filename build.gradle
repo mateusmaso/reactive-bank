@@ -14,6 +14,7 @@ dependencies {
   compile "com.sparkjava:spark-core:2.9.0"
   compile "com.fasterxml.jackson.core:jackson-databind:2.0.1"
   compile project(":money")
+  compile project(":money-inmemory")
 
   testCompile "org.mockito:mockito-core:2.27.0"
   testCompile "junit:junit:4.12"
