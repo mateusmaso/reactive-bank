@@ -1,0 +1,27 @@
+plugins {
+  id 'java'
+  id 'application'
+}
+
+mainClassName = 'revolut.backend.test.Application'
+
+repositories {
+  mavenCentral()
+}
+
+dependencies {
+  compile "org.slf4j:slf4j-simple:1.7.21"
+  compile "com.sparkjava:spark-core:2.9.0"
+  compile "com.fasterxml.jackson.core:jackson-databind:2.0.1"
+  compile project(":money")
+
+  testCompile "org.mockito:mockito-core:2.27.0"
+  testCompile "junit:junit:4.12"
+}
+
+java {
+  group = 'revolut.backend.test'
+  version = '1.0'
+  sourceCompatibility = JavaVersion.VERSION_1_8
+  targetCompatibility = JavaVersion.VERSION_1_8
+}

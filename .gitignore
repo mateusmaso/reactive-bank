@@ -1,0 +1,25 @@
+### Commons ###
+out
+tmp
+!bin
+*/bin
+bin/main
+bin/test
+hs_err_pid*.log
+.DS_Store
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.sts4-cache
+
+### Gradle ###
+.gradle
+build/
+!gradle/wrapper/gradle-wrapper.jar
+
+### Editor ###
+.vscode
