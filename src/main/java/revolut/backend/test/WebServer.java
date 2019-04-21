@@ -1,25 +1,24 @@
 package revolut.backend.test;
 
 import money.MonetaryAmount;
+import money.MonetaryException;
 import money.account.models.Account;
 import money.account.repositories.AccountRepository;
-import money.account.repositories.AccountRepositoryInMemory;
 import money.account.services.AccountService;
 import money.account.services.AccountServiceImpl;
 import money.exceptions.AccountNotFoundException;
 import money.exceptions.CurrencyNotAllowedException;
 import money.exceptions.InsufficientBalanceException;
 import money.exceptions.InvalidTransactionException;
-import money.store.AccountStore;
-import money.store.TransactionEntriesByAccountStore;
 import money.transaction.models.Transaction;
 import money.transaction.repositories.TransactionRepository;
-import money.transaction.repositories.TransactionRepositoryInMemory;
-
-import static spark.Spark.*;
+import money.inmemory.*;
 
 import java.io.IOException;
 import java.io.StringWriter;
+import java.math.BigDecimal;
+import java.util.Arrays;
+import java.util.Currency;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -30,52 +29,61 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import io.javalin.Javalin;
+
 public class WebServer {
-  private static AccountStore accountStore = new AccountStore();
-  private static AccountRepository accountRepository = new AccountRepositoryInMemory(accountStore);
-  private static TransactionEntriesByAccountStore transactionEntriesByAccountStore = new TransactionEntriesByAccountStore();
-  private static TransactionRepository transactionRepository = new TransactionRepositoryInMemory(transactionEntriesByAccountStore);
-  private static AccountService accountService = new AccountServiceImpl(accountRepository, transactionRepository);
-  private static Logger logger = LoggerFactory.getLogger(WebServer.class);
+  private AccountService accountService;
+  private Logger logger;
+  private Javalin app;
+
+  public WebServer() {
+    AccountStore accountStore = new AccountStore();
+    InMemoryAccountRepository accountRepository = new InMemoryAccountRepository(accountStore);
+    TransactionEntriesByAccountStore transactionEntriesByAccountStore = new TransactionEntriesByAccountStore();
+    InMemoryTransactionRepository transactionRepository = new InMemoryTransactionRepository(transactionEntriesByAccountStore);
+
+    this.accountService = new AccountServiceImpl(accountRepository, transactionRepository);
+    this.logger = LoggerFactory.getLogger(WebServer.class);
+    this.app = Javalin.create();
+  }
 
   public void start(Integer port) {
     logger.info("Web server started on port " + port);
 
-    port(port);
-    post("transfers", (request, response) -> {
-      Map<String, Object> payload = jsonToData(request.body());
-      logger.info(dataToJson(payload));
+    this.app.start(port);
+    this.app.post("/transfers", ctx -> {
+      Map<String, Object> payload = jsonToData(ctx.body());
+      this.logger.info(dataToJson(payload));
 
-      // validate amount (bigdecimal 2)
-      // accountService.transfer(String fromAccountId, String toAccountId, MonetaryAmount amount);
+      String fromAccountId = (String) payload.get("fromAccountId");
+      String toAccountId = (String) payload.get("toAccountId");
+      MonetaryAmount amount = new MonetaryAmount(
+        Currency.getInstance((String) payload.get("currency")),
+        BigDecimal.valueOf((Float) payload.get("amount"))
+      );
 
-      response.status(201);
-      response.type("application/json");
-      return dataToJson(new HashMap<>());
+      ctx.status(201);
+      ctx.contentType("application/json");
+      ctx.result(
+        accountService
+          .transfer(fromAccountId, toAccountId, amount)
+          .thenApply((transfer) -> dataToJson(transfer))
+      );
     });
 
-    exception(AccountNotFoundException.class, (exception, request, response) -> {
-      response.status(422);
-      response.type("application/json");
-      response.body(dataToJson(buildError("ACCOUNT_NOT_FOUND", exception.getMessage())));
-    });
+    Arrays.asList(
+      AccountNotFoundException.class,
+      CurrencyNotAllowedException.class,
+      InsufficientBalanceException.class,
+      InvalidTransactionException.class
+    ).stream().forEach((exceptionClass) -> {
+      this.app.exception(exceptionClass, (exception, ctx) -> {
+        MonetaryException monetaryException = (MonetaryException) exception;
 
-    exception(CurrencyNotAllowedException.class, (exception, request, response) -> {
-      response.status(422);
-      response.type("application/json");
-      response.body(dataToJson(buildError("CURRENCY_NOT_ALLOWED", exception.getMessage())));
-    });
-
-    exception(InsufficientBalanceException.class, (exception, request, response) -> {
-      response.status(422);
-      response.type("application/json");
-      response.body(dataToJson(buildError("INSUFFICIENT_BALANCE", exception.getMessage())));
-    });
-
-    exception(InvalidTransactionException.class, (exception, request, response) -> {
-      response.status(422);
-      response.type("application/json");
-      response.body(dataToJson(buildError("TRANSFER_DENIED", exception.getMessage())));
+        ctx.status(422);
+        ctx.contentType("application/json");
+        ctx.result(dataToJson(buildError(monetaryException.getErrorCode(), monetaryException.getMessage())));
+      });
     });
   }
 

@@ -1,4 +1,4 @@
-package money.store;
+package money.inmemory;
 
 import java.util.Collections;
 import java.util.HashMap;

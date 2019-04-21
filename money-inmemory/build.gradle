@@ -8,6 +8,5 @@ repositories {
 
 dependencies {
   compile project(":money")
-  
   testCompile "junit:junit:4.12"
 }
