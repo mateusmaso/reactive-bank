@@ -3,7 +3,7 @@ plugins {
   id 'application'
 }
 
-mainClassName = 'com.mateusmaso.reactive.bank'
+mainClassName = 'com.mateusmaso.reactive.bank.Application'
 
 repositories {
   mavenCentral()
