@@ -1,5 +1,7 @@
 # reactive-bank
 
+This is an example project for a bank API using reactive programming and concurrent operations in memory. It exposes a web API to the external world and it handle multiple requests concurrently. Bear in mind that this project was not meant to be ran in a distributed environment since it's data is kept locally without persistance guarantee after the process is killed.
+
 - Written in Java 8 using `Streams` and final objects for immutability.
 - Reactive programming with `ComputableFuture` in I/O blocking methods.
 - Async request handling with `Javalin` and `ComputableFuture`.
