@@ -1,6 +1,6 @@
 # reactive-bank
 
-This is project proposal for a bank API using reactive programming and ACID concurrent operations in memory. It exposes a web interface to the external world and it handle multiple requests concurrently. Bear in mind that this project was not meant to be ran in a distributed environment since it's data is kept locally without persistance guarantee after the process is killed.
+This is a proposal of a bank API written using reactive programming and ACID concurrent operations in memory. It exposes a web interface to the external world and it handle multiple requests concurrently. Bear in mind that this project was not meant to be ran in a distributed environment since it's data is kept locally without persistance guarantee after the process is killed.
 
 - Written in Java 8 using `Streams` and final objects for immutability.
 - Reactive programming with `ComputableFuture` in I/O blocking methods.
