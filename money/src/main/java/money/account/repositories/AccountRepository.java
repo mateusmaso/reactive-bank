@@ -7,4 +7,5 @@ import money.account.models.Account;
 
 public interface AccountRepository {
   public CompletableFuture<Optional<Account>> findById(String id);
+  public CompletableFuture<Account> create(Account account);
 }

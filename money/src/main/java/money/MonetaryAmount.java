@@ -1,6 +1,7 @@
 package money;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Currency;
 import java.util.Optional;
 
@@ -9,16 +10,14 @@ public class MonetaryAmount {
   private final BigDecimal amount;
 
   public MonetaryAmount(Currency currency, BigDecimal amount) {
-    if (!Optional.ofNullable(currency).isPresent()) {
-      throw new RuntimeException("Currency must be present.");
-    }
-
-    if (!Optional.ofNullable(amount).isPresent()) {
-      throw new RuntimeException("Amount must be present.");
-    }
-
-    this.currency = currency;
-    this.amount = amount;
+    this.currency = Optional
+      .ofNullable(currency)
+      .orElseThrow(() -> new RuntimeException("Currency must be present"));
+    
+    this.amount = Optional
+      .ofNullable(amount)
+      .map((amountUnscaled) -> amountUnscaled.setScale(2, RoundingMode.HALF_DOWN))
+      .orElseThrow(() -> new RuntimeException("Amount must be present"));
   }
 
   public Currency getCurrency() {

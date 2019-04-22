@@ -8,7 +8,6 @@ import money.account.models.Account;
 import money.exceptions.CurrencyNotAllowedException;
 
 public class TransactionEntry {
-  private Transaction transaction;
   private final Account account;
   private final MonetaryAmount amount;
   private final TransactionEntryType type;
@@ -19,25 +18,21 @@ public class TransactionEntry {
   }
 
   private TransactionEntry(Account account, MonetaryAmount amount, TransactionEntryType type) {
-   if (!Optional.ofNullable(account).isPresent()) {
-      throw new RuntimeException("Account must be present.");
-    }
+    this.account = Optional
+      .ofNullable(account)
+      .orElseThrow(() -> new RuntimeException("Account must be present"));;
 
-    if (!Optional.ofNullable(account).isPresent()) {
-      throw new RuntimeException("Account must be present.");
-    }
+    this.amount = Optional
+      .ofNullable(amount)
+      .orElseThrow(() -> new RuntimeException("Amount must be present"));
 
-    if (!Optional.ofNullable(type).isPresent()) {
-      throw new RuntimeException("Type must be present.");
-    }
-    
+    this.type = Optional
+      .ofNullable(type)
+      .orElseThrow(() -> new RuntimeException("Type must be present"));
+
     if (!account.getCurrency().equals(amount.getCurrency())) {
       throw new CurrencyNotAllowedException();
     }
-
-    this.account = account;
-    this.amount = amount;
-    this.type = type;
   }
 
   public static TransactionEntry debit(Account account, MonetaryAmount amount) {
@@ -62,14 +57,6 @@ public class TransactionEntry {
 
   public MonetaryAmount getAmount() {
     return this.amount;
-  }
-
-  public Transaction getTransaction() {
-    return this.transaction;
-  }
-
-  public void setTransaction(Transaction transaction) {
-    this.transaction = transaction;
   }
 
   public BigDecimal getSignedAmount() {

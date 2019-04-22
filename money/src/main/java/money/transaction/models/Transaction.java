@@ -1,7 +1,6 @@
 package money.transaction.models;
 
 import java.util.Optional;
-import java.util.SortedSet;
 
 import money.exceptions.InvalidTransactionException;
 
@@ -17,23 +16,18 @@ public class Transaction {
     TRANSFER
   }
 
-  public Transaction(String id, TransactionType type, SortedSet<TransactionEntry> doubleEntry) {
-    if (!Optional.ofNullable(doubleEntry.first()).isPresent()) {
-      throw new RuntimeException("Debit entry must be present.");
-    }
-
-    if (!Optional.ofNullable(doubleEntry.last()).isPresent()) {
-      throw new RuntimeException("Credit entry must be present.");
-    }
-
+  public Transaction(String id, TransactionType type, TransactionEntry debitEntry, TransactionEntry creditEntry) {
     this.id = id;
     this.type = type;
-    this.debitEntry = doubleEntry.first();
-    this.debitEntry.setTransaction(this);
-    this.creditEntry = doubleEntry.last();
-    this.creditEntry.setTransaction(this);
+    this.debitEntry = Optional
+      .ofNullable(debitEntry)
+      .orElseThrow(() -> new RuntimeException("Debit entry must be present"));
+    
+    this.creditEntry = Optional
+      .ofNullable(creditEntry)
+      .orElseThrow(() -> new RuntimeException("Credit entry must be present"));
 
-    if (!this.debitEntry.getAccount().equals(this.creditEntry.getAccount())) {
+    if (this.debitEntry.getAccount().equals(this.creditEntry.getAccount())) {
       throw new InvalidTransactionException();
     }
   }

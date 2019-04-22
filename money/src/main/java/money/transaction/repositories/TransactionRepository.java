@@ -8,5 +8,5 @@ import money.transaction.models.Transaction;
 
 public interface TransactionRepository {
   public CompletableFuture<MonetaryAmount> sumBalance(Account account);
-  public CompletableFuture<Transaction> addTransaction(Transaction transaction);
+  public CompletableFuture<Transaction> create(Transaction transaction);
 }

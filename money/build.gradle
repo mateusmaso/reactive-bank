@@ -6,6 +6,9 @@ repositories {
   mavenCentral() 
 }
 
-dependencies {  
+dependencies {
+  compile "org.slf4j:slf4j-simple:1.7.21"
+
+  testCompile "org.mockito:mockito-core:2.27.0"
   testCompile "junit:junit:4.12"
 }
