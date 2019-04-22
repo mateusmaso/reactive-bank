@@ -1,4 +1,4 @@
-package revolut.backend.test;
+package com.mateusmaso.reactive.bank;
 
 import static org.junit.Assert.assertEquals;
 

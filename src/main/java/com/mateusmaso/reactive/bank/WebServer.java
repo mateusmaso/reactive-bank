@@ -1,4 +1,4 @@
-package revolut.backend.test;
+package com.mateusmaso.reactive.bank;
 
 import money.MonetaryAmount;
 import money.MonetaryException;

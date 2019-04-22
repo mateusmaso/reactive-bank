@@ -3,7 +3,7 @@ plugins {
   id 'application'
 }
 
-mainClassName = 'revolut.backend.test.Application'
+mainClassName = 'com.mateusmaso.reactive.bank'
 
 repositories {
   mavenCentral()
@@ -20,7 +20,7 @@ dependencies {
 }
 
 java {
-  group = 'revolut.backend.test'
+  group = 'com.mateusmaso.reactive.bank'
   version = '1.0'
   sourceCompatibility = JavaVersion.VERSION_1_8
   targetCompatibility = JavaVersion.VERSION_1_8

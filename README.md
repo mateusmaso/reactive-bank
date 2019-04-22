@@ -1,4 +1,4 @@
-# revolut-backend-test
+# reactive-bank
 
 - Java 8.
 - Reactive Framework. (Vert.x? Akka?)
