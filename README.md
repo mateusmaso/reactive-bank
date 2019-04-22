@@ -1,36 +1,34 @@
 # reactive-bank
 
-- Java 8.
-- Reactive Framework. (Vert.x? Akka?)
-- Dependency Injection. (Manual)
-- Event-Driven. (Event Bus)
-- FP + Immutability vs OOP + Akka.
-- Mem atomicity?
-- TDD using Spock? (Unit + Integration + E2E for Parallelism)
-- Dockerize + executable as a standalone program
-- Abstractions (Account, Transfer, Balance)
-- Business Rules (cannot be negative, must have balance)
-- Receive transfer, debit, send event async (overengineer?).
+- Written in Java 8.
+- Reactive programming using `ComputableFuture`.
+- Reactive web server with `Javalin`.
+- Manual dependency injection.
+- Append-only & atomic data model. (`Transaction`)
+- TDD using `JUnit` and `Mockito`.
 
-## API Spec
+| Method | Resource                                 | Description                                         |
+| ------ | ---------------------------------------- | --------------------------------------------------- |
+| POST   | /accounts                                | Creates an account                                  |
+| GET    | /accounts/:id/balance                    | Retrieves account's balance                         |
+| POST   | /transfers                               | Transfer money between accounts                     |
+| POST   | /load                                    | Load money into account                             |
+| POST   | /unload                                  | Unload money from account                           |
 
-- POST /transfers
+## Install
 
-> Request
-
-```
-{
-  "fromAccountId": "111",
-  "toAccountId": "222",
-  "amount": 2.32,
-  "currency": "USD"
-}
+```sh
+$ ./gradlew build
 ```
 
-> Response
+## Run API
 
+```sh
+$ ./gradlew run
 ```
-{
-  "id": "b9317392-7bba-41ed-8a3a-47db82b0a993"
-}
+
+## Testing
+
+```sh
+$ ./gradlew test
 ```
