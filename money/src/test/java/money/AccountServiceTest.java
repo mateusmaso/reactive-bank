@@ -22,6 +22,7 @@ import money.account.Account;
 import money.account.AccountRepository;
 import money.account.AccountService;
 import money.exceptions.InsufficientBalanceException;
+import money.exceptions.InvalidTransactionException;
 import money.transaction.Transaction;
 import money.transaction.TransactionRepository;
 
@@ -106,6 +107,25 @@ public class AccountServiceTest {
       (result, exception) -> {
         assertNotNull(exception);
         assertEquals(exception.getClass(), InsufficientBalanceException.class);
+      }
+    );
+  }
+
+  @Test
+  public void itShouldNotTransferNegativeAmount() {
+    Account accountMock1 = createUsdAccountMock("abc123", BigDecimal.TEN);
+    Account accountMock2 = createUsdAccountMock("abc321", BigDecimal.ZERO);
+    stubCreateTransaction();
+
+    accountService.transfer(
+      accountMock1.getId(), 
+      accountMock2.getId(), 
+      MonetaryAmount.usd(BigDecimal.TEN.negate())
+    ).whenComplete(
+      (result, exception) -> {
+        assertNotNull(exception);
+        assertEquals(exception.getClass(), InvalidTransactionException.class);
+        assertEquals(exception.getMessage(), "Amount can't be negative");
       }
     );
   }

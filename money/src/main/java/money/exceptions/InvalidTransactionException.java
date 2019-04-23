@@ -8,4 +8,8 @@ public final class InvalidTransactionException extends MonetaryException {
   public InvalidTransactionException() {
     super("INVALID_TRANSACTION", "Invalid transaction");
   }
+
+  public InvalidTransactionException(String message) {
+    super("INVALID_TRANSACTION", message);
+  }
 }

@@ -1,5 +1,6 @@
 package money.account;
 
+import java.math.BigDecimal;
 import java.util.Currency;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
@@ -10,6 +11,7 @@ import money.account.Account;
 import money.account.AccountRepository;
 import money.exceptions.AccountNotFoundException;
 import money.exceptions.InsufficientBalanceException;
+import money.exceptions.InvalidTransactionException;
 import money.transaction.Transaction;
 import money.transaction.TransactionEntry;
 import money.transaction.Transaction.TransactionType;
@@ -54,6 +56,10 @@ public class AccountService {
   }
 
   private CompletableFuture<Transaction> addTransaction(TransactionType type, Account debitAccount, Account creditAccount, MonetaryAmount amount) {
+    if (amount.getAmount().compareTo(BigDecimal.ZERO) != 1) {
+      throw new InvalidTransactionException("Amount can't be negative");
+    }
+    
     return accountOperation.operateOn(debitAccount, () -> {
       return getBalance(debitAccount.getId()).thenApply((balance) -> {
         if (!debitAccount.isOperational() && balance.getAmount().compareTo(amount.getAmount()) == -1) {
