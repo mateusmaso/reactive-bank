@@ -5,11 +5,13 @@ This is a proposal of a bank API written using reactive programming and concurre
 - Used an in-memory data store. (will not work in distributed systems)
 - Chose atomic data models with append-only structures to avoid dealing with `ACID` transactions.
 - Wrote in Java 8 using `Streams` and immutable objects for composability and thread safety.
-- Chose to use async request handling with `Javalin` and `ComputableFuture` to allow more concurrency.
+- Chose to use async request handling with `Javalin` and `ComputableFuture` to allow more web concurrency.
 - Designed based on onion/hexagonal architecture. (core domain and infra classes are separeted)
-- Followed SOLID principles such as dependency injection and inversion.
-- Handled debit account operations a single Java `synchronized` mechanism for locking to avoid deadlocks.
+- Followed `SOLID` principles such as dependency injection and inversion.
+- Handled debit account operations with a single Java `synchronized` for locking to avoid deadlocks.
 - Used `TDD` with `JUnit` and `Mockito` for unit and integration tests.
+
+[API Specification](DOCUMENTATION.md)
 
 | Method | Resource                                 | Description                                         |
 | ------ | ---------------------------------------- | --------------------------------------------------- |
