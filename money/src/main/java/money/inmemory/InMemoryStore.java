@@ -1,8 +1,8 @@
 package money.inmemory;
 
-import money.account.models.Account;
-import money.transaction.models.Transaction;
-import money.transaction.models.TransactionEntry;
+import money.account.Account;
+import money.transaction.Transaction;
+import money.transaction.TransactionEntry;
 
 import java.util.List;
 import java.util.Map;

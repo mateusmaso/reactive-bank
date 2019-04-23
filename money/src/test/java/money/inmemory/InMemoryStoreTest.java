@@ -4,10 +4,10 @@ import org.junit.Before;
 import org.junit.Test;
 
 import money.MonetaryAmount;
-import money.account.models.Account;
-import money.transaction.models.Transaction;
-import money.transaction.models.TransactionEntry;
-import money.transaction.models.Transaction.TransactionType;
+import money.account.Account;
+import money.transaction.Transaction;
+import money.transaction.TransactionEntry;
+import money.transaction.Transaction.TransactionType;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;

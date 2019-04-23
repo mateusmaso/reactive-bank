@@ -1,4 +1,4 @@
-package money.transaction.models;
+package money.transaction;
 
 import java.util.Optional;
 

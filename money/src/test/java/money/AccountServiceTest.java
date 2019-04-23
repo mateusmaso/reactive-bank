@@ -18,13 +18,12 @@ import org.junit.Before;
 import org.junit.Test;
 
 import money.account.AccountOperation;
-import money.account.models.Account;
-import money.account.repositories.AccountRepository;
-import money.account.services.AccountService;
-import money.account.services.AccountServiceImpl;
+import money.account.Account;
+import money.account.AccountRepository;
+import money.account.AccountService;
 import money.exceptions.InsufficientBalanceException;
-import money.transaction.models.Transaction;
-import money.transaction.repositories.TransactionRepository;
+import money.transaction.Transaction;
+import money.transaction.TransactionRepository;
 
 public class AccountServiceTest {
   private AccountOperation accountOperationMock;
@@ -44,7 +43,7 @@ public class AccountServiceTest {
     this.accountOperationMock = new DummyUnsafeOperation();
     this.accountRepositoryMock = mock(AccountRepository.class);
     this.transactionRepositoryMock = mock(TransactionRepository.class);
-    this.accountService = new AccountServiceImpl(
+    this.accountService = new AccountService(
       accountOperationMock,
       accountRepositoryMock,
       transactionRepositoryMock

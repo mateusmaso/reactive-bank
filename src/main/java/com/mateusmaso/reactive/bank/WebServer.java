@@ -2,15 +2,14 @@ package com.mateusmaso.reactive.bank;
 
 import money.MonetaryAmount;
 import money.MonetaryException;
-import money.account.models.Account;
-import money.account.services.AccountService;
-import money.account.services.AccountServiceImpl;
+import money.account.Account;
+import money.account.AccountService;
 import money.exceptions.AccountNotFoundException;
 import money.exceptions.CurrencyNotAllowedException;
 import money.exceptions.InsufficientBalanceException;
 import money.exceptions.InvalidTransactionException;
 import money.inmemory.*;
-import money.transaction.models.Transaction;
+import money.transaction.Transaction;
 
 import java.io.IOException;
 import java.io.StringWriter;
@@ -41,7 +40,7 @@ public class WebServer {
     InMemoryAccountRepository accountRepository = new InMemoryAccountRepository(store);
     InMemoryTransactionRepository transactionRepository = new InMemoryTransactionRepository(store);
 
-    this.accountService = new AccountServiceImpl(accountOperation, accountRepository, transactionRepository);
+    this.accountService = new AccountService(accountOperation, accountRepository, transactionRepository);
     this.logger = LoggerFactory.getLogger(WebServer.class);
     this.app = Javalin.create();
     this.started = false;

@@ -6,10 +6,10 @@ import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
 import money.MonetaryAmount;
-import money.account.models.Account;
-import money.transaction.models.Transaction;
-import money.transaction.models.TransactionEntry;
-import money.transaction.repositories.TransactionRepository;
+import money.account.Account;
+import money.transaction.Transaction;
+import money.transaction.TransactionEntry;
+import money.transaction.TransactionRepository;
 
 public class InMemoryTransactionRepository implements TransactionRepository {
   private final InMemoryStore store;

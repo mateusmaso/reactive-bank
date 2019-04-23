@@ -1,4 +1,4 @@
-package money.account.models;
+package money.account;
 
 import java.util.Currency;
 

@@ -1,10 +1,10 @@
-package money.transaction.repositories;
+package money.transaction;
 
 import java.util.concurrent.CompletableFuture;
 
 import money.MonetaryAmount;
-import money.account.models.Account;
-import money.transaction.models.Transaction;
+import money.account.Account;
+import money.transaction.Transaction;
 
 public interface TransactionRepository {
   public CompletableFuture<MonetaryAmount> sumBalance(Account account);

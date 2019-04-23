@@ -1,10 +1,10 @@
-package money.transaction.models;
+package money.transaction;
 
 import java.math.BigDecimal;
 import java.util.Optional;
 
 import money.MonetaryAmount;
-import money.account.models.Account;
+import money.account.Account;
 import money.exceptions.CurrencyNotAllowedException;
 
 public class TransactionEntry {

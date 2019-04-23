@@ -3,8 +3,8 @@ package money.inmemory;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
-import money.account.models.Account;
-import money.account.repositories.AccountRepository;
+import money.account.Account;
+import money.account.AccountRepository;
 
 public class InMemoryAccountRepository implements AccountRepository {
   private final InMemoryStore store;

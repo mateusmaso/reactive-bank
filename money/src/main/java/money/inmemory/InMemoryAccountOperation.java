@@ -3,7 +3,7 @@ package money.inmemory;
 import java.util.function.Supplier;
 
 import money.account.AccountOperation;
-import money.account.models.Account;
+import money.account.Account;
 
 public class InMemoryAccountOperation implements AccountOperation {
   @Override
