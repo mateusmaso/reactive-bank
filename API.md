@@ -1,6 +1,6 @@
-# Documentation
+# API
 
-### `POST` /accounts
+## `POST` /accounts
 
 Request
 
@@ -18,7 +18,7 @@ Response
 }
 ```
 
-### `GET` /accounts/:id/balance
+## `GET` /accounts/:id/balance
 
 Response
 
@@ -29,7 +29,7 @@ Response
 }
 ```
 
-### `POST` /load
+## `POST` /load
 
 Request
 
@@ -53,7 +53,7 @@ Response
 }
 ```
 
-### `POST` /transfers
+## `POST` /transfers
 
 Request
 
@@ -77,7 +77,7 @@ Response
 }
 ```
 
-### `POST` /transfers
+## `POST` /transfers
 
 Request
 
