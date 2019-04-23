@@ -1,15 +1,15 @@
 # reactive-bank
 
-This is a proposal of a bank API written using reactive programming and ACID concurrent operations in memory. It exposes a web interface to the external world and it handle multiple requests concurrently. Bear in mind that this project was not meant to be ran in a distributed environment since it's data is kept locally without persistance guarantee after the process is killed.
+This is a proposal of a bank API written using reactive programming and concurrent operations in memory. It exposes a web interface to the external world and handles multiple requests concurrently. Bear in mind that this project was not meant to be ran in a distributed environment since it's data is kept locally without persistance after killing the process.
 
-- Written in Java 8 using `Streams` and final objects for immutability.
-- Reactive programming with `ComputableFuture` in I/O blocking methods.
-- Async request handling with `Javalin` and `ComputableFuture`.
-- Dependency injection and inversion written manually.
-- In-memory datastore.
-- Concurrency handled through Java `synchronized`.
-- Data models with append-only and `ACID` structures (`Account`, `Transaction`)
-- `TDD` using `JUnit` and `Mockito` for unit, integration and concurrency tests.
+- Used an in-memory data store. (will not work in distributed systems)
+- Chose atomic data models with append-only structures to avoid dealing with `ACID` transactions.
+- Wrote in Java 8 using `Streams` and immutable objects for composability and thread safety.
+- Chose to use async request handling with `Javalin` and `ComputableFuture` to allow more concurrency.
+- Designed based on onion/hexagonal architecture. (core domain and infra classes are separeted)
+- Followed SOLID principles such as dependency injection and inversion.
+- Handled debit account operations a single Java `synchronized` mechanism for locking to avoid deadlocks.
+- Used `TDD` with `JUnit` and `Mockito` for unit and integration tests.
 
 | Method | Resource                                 | Description                                         |
 | ------ | ---------------------------------------- | --------------------------------------------------- |
