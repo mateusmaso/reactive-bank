@@ -21,7 +21,7 @@ import money.account.AccountOperation;
 import money.account.Account;
 import money.account.AccountRepository;
 import money.account.AccountService;
-import money.exceptions.InsufficientBalanceException;
+import money.exceptions.InsufficientFundsException;
 import money.exceptions.InvalidTransactionException;
 import money.transaction.Transaction;
 import money.transaction.TransactionRepository;
@@ -56,8 +56,8 @@ public class AccountServiceTest {
     Account accountMock = createUsdAccountMock("abc123", BigDecimal.TEN);
     MonetaryAmount balance = accountService.getBalance(accountMock.getId()).join();
 
-    assertEquals(balance.getAmount(), BigDecimal.TEN.setScale(2));
-    assertEquals(balance.getCurrency(), Currency.getInstance("USD"));
+    assertEquals(BigDecimal.TEN.setScale(2), balance.getAmount());
+    assertEquals(Currency.getInstance("USD"), balance.getCurrency());
   }
 
   @Test
@@ -67,7 +67,7 @@ public class AccountServiceTest {
     stubCreateTransaction();
 
     accountService.load(
-      accountMock.getId(), 
+      accountMock.getId(),
       MonetaryAmount.usd(BigDecimal.TEN)
     ).join();
 
@@ -84,7 +84,7 @@ public class AccountServiceTest {
     stubCreateTransaction();
 
     accountService.unload(
-      accountMock.getId(), 
+      accountMock.getId(),
       MonetaryAmount.usd(BigDecimal.TEN)
     ).join();
 
@@ -101,12 +101,12 @@ public class AccountServiceTest {
     stubCreateTransaction();
 
     accountService.unload(
-      accountMock.getId(), 
+      accountMock.getId(),
       MonetaryAmount.usd(BigDecimal.TEN)
     ).whenComplete(
       (result, exception) -> {
         assertNotNull(exception);
-        assertEquals(exception.getClass(), InsufficientBalanceException.class);
+        assertEquals(exception.getClass(), InsufficientFundsException.class);
       }
     );
   }
@@ -124,8 +124,8 @@ public class AccountServiceTest {
     ).whenComplete(
       (result, exception) -> {
         assertNotNull(exception);
-        assertEquals(exception.getClass(), InvalidTransactionException.class);
-        assertEquals(exception.getMessage(), "Amount can't be negative");
+        assertEquals(InvalidTransactionException.class, exception.getClass());
+        assertEquals("Amount can't be negative", exception.getMessage());
       }
     );
   }
@@ -163,7 +163,7 @@ public class AccountServiceTest {
     ).whenComplete(
       (result, exception) -> {
         assertNotNull(exception);
-        assertEquals(exception.getClass(), InsufficientBalanceException.class);
+        assertEquals(InsufficientFundsException.class, exception.getClass());
       }
     );
   }

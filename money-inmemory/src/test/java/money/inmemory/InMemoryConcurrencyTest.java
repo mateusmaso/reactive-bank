@@ -39,7 +39,7 @@
 //   ).whenComplete(
 //     (result, exception) -> {
 //       assertNotNull(exception);
-//       assertEquals(exception.getClass(), InsufficientBalanceException.class);
+//       assertEquals(exception.getClass(), InsufficientFundsException.class);
 //     }
 //   );
 // }

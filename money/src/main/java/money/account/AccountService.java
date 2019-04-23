@@ -10,7 +10,7 @@ import money.account.AccountOperation;
 import money.account.Account;
 import money.account.AccountRepository;
 import money.exceptions.AccountNotFoundException;
-import money.exceptions.InsufficientBalanceException;
+import money.exceptions.InsufficientFundsException;
 import money.exceptions.InvalidTransactionException;
 import money.transaction.Transaction;
 import money.transaction.TransactionEntry;
@@ -63,7 +63,7 @@ public class AccountService {
     return accountOperation.operateOn(debitAccount, () -> {
       return getBalance(debitAccount.getId()).thenApply((balance) -> {
         if (!debitAccount.isOperational() && balance.getAmount().compareTo(amount.getAmount()) == -1) {
-          throw new InsufficientBalanceException();
+          throw new InsufficientFundsException();
         }
 
         Transaction transaction = new Transaction(

@@ -44,7 +44,7 @@ public class InMemoryTransactionRepositoryTest {
     when(storeMock.getTransactionEntriesByAccountId()).thenReturn(transactionEntriesByAccountId);
 
     MonetaryAmount balance = this.repository.sumBalance(accountMock).join();
-    assertEquals(balance.getAmount(), BigDecimal.TEN.setScale(2));
+    assertEquals(BigDecimal.TEN.setScale(2), balance.getAmount());
   }
 
   @Test
@@ -57,6 +57,6 @@ public class InMemoryTransactionRepositoryTest {
     when(storeMock.getTransactionEntriesByAccountId()).thenReturn(transactionEntriesByAccountId);
 
     MonetaryAmount balance = this.repository.sumBalance(accountMock).join();
-    assertEquals(balance.getAmount(), BigDecimal.ZERO.setScale(2));
+    assertEquals(BigDecimal.ZERO.setScale(2), balance.getAmount());
   }
 }

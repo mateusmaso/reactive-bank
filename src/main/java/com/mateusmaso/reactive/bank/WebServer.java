@@ -6,7 +6,7 @@ import money.account.Account;
 import money.account.AccountService;
 import money.exceptions.AccountNotFoundException;
 import money.exceptions.CurrencyNotAllowedException;
-import money.exceptions.InsufficientBalanceException;
+import money.exceptions.InsufficientFundsException;
 import money.exceptions.InvalidTransactionException;
 import money.inmemory.*;
 import money.transaction.Transaction;
@@ -57,6 +57,10 @@ public class WebServer {
       handleUnload();
       handleExceptions();
     }
+  }
+
+  public void stop() {
+    this.app.stop();
   }
 
   private static String dataToJson(Object data) {
@@ -185,7 +189,7 @@ public class WebServer {
       boolean isMonetaryException = Arrays.asList(
         AccountNotFoundException.class,
         CurrencyNotAllowedException.class,
-        InsufficientBalanceException.class,
+        InsufficientFundsException.class,
         InvalidTransactionException.class
       ).contains(completionException.getCause().getClass());
 

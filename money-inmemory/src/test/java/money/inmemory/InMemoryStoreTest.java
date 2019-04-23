@@ -39,7 +39,7 @@ public class InMemoryStoreTest {
   public void itShouldGetAccountByIdWhenInserted() {
     Account account = new Account("abc123", Currency.getInstance("USD"));
     this.store.putAccount(account);
-    assertEquals(this.store.getAccountsById().get("abc123"), account);
+    assertEquals(account, this.store.getAccountsById().get("abc123"));
   }
 
   @Test
@@ -78,16 +78,16 @@ public class InMemoryStoreTest {
     assertNotNull(debitAccountTransactionEntries);
     assertNotNull(creditAccountTransactionEntries);
 
-    assertEquals(debitAccountTransactionEntries.size(), 1);
+    assertEquals(1, debitAccountTransactionEntries.size());
     assertEquals(
-      debitAccountTransactionEntries.get(0).getSignedAmount(),
-      BigDecimal.TEN.negate().setScale(2)
+      BigDecimal.TEN.negate().setScale(2),
+      debitAccountTransactionEntries.get(0).getSignedAmount()
     );
 
     assertEquals(creditAccountTransactionEntries.size(), 1);
     assertEquals(
-      creditAccountTransactionEntries.get(0).getSignedAmount(),
-      BigDecimal.TEN.setScale(2)
+      BigDecimal.TEN.setScale(2),
+      creditAccountTransactionEntries.get(0).getSignedAmount()
     );
   }
 }
