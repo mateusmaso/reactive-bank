@@ -56,8 +56,8 @@ public class AccountService {
   }
 
   private CompletableFuture<Transaction> addTransaction(TransactionType type, Account debitAccount, Account creditAccount, MonetaryAmount amount) {
-    if (amount.getAmount().compareTo(BigDecimal.ZERO) != 1) {
-      throw new InvalidTransactionException("Amount can't be negative");
+    if (amount.getAmount().compareTo(BigDecimal.ZERO) < 1) {
+      throw new InvalidTransactionException("Amount can't be zero or negative");
     }
     
     return accountOperation.operateOn(debitAccount, () -> {

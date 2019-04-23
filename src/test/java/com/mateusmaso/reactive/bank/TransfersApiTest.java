@@ -122,7 +122,6 @@ public class TransfersApiTest {
     assertEquals(200, getBalanceResponse2.getStatus());
     JSONObject balance2 = getBalanceResponse2.getBody().getObject();
     assertEquals(BigDecimal.TEN.setScale(2), balance2.getBigDecimal("amount").setScale(2));
-
   }
 
   @Test

@@ -125,7 +125,7 @@ public class AccountServiceTest {
       (result, exception) -> {
         assertNotNull(exception);
         assertEquals(InvalidTransactionException.class, exception.getClass());
-        assertEquals("Amount can't be negative", exception.getMessage());
+        assertEquals("Amount can't be zero or negative", exception.getMessage());
       }
     );
   }
