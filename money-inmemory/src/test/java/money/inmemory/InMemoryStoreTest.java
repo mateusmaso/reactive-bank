@@ -36,7 +36,7 @@ public class InMemoryStoreTest {
   }
 
   @Test
-	public void itShouldGetAccountByIdWhenInserted() {
+  public void itShouldGetAccountByIdWhenInserted() {
     Account account = new Account("abc123", Currency.getInstance("USD"));
     this.store.putAccount(account);
     assertEquals(this.store.getAccountsById().get("abc123"), account);
@@ -53,7 +53,7 @@ public class InMemoryStoreTest {
   }
 
   @Test
-	public void itShouldGetTransactionEntriesByAccountIdWhenInserted() {
+  public void itShouldGetTransactionEntriesByAccountIdWhenInserted() {
     Account debitAccount = new Account("123", Currency.getInstance("USD"));
     Account creditAccount = new Account("321", Currency.getInstance("USD"));
     MonetaryAmount amount = MonetaryAmount.usd(BigDecimal.TEN);

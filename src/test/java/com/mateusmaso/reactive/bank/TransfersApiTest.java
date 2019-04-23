@@ -46,7 +46,7 @@ public class TransfersApiTest {
   }
 
   @Test
-	public void itShouldCreateAccount() {
+  public void itShouldCreateAccount() {
     HttpResponse<JsonNode> response = createAccount("USD");
     assertEquals(response.getStatus(), 201);
   }

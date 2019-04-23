@@ -59,11 +59,6 @@ public class WebServer {
     }
   }
 
-  private static Map<String, String> buildError(String code, String message) {
-    Map<String, String> errorMap = new HashMap<>();
-    return errorMap;
-  }
-
   private static String dataToJson(Object data) {
     try {
       ObjectMapper mapper = new ObjectMapper();
@@ -198,7 +193,7 @@ public class WebServer {
         MonetaryException monetaryException = (MonetaryException) completionException.getCause();
         ctx.status(422);
         ctx.contentType("application/json");
-        ctx.result(dataToJson(buildError(monetaryException.getErrorCode(), monetaryException.getMessage())));  
+        ctx.result(dataToJson(buildResponseMap(monetaryException)));  
       }
     });
   }
@@ -213,6 +208,13 @@ public class WebServer {
     } else {
       return null;
     }
+  }
+
+  private HashMap<String, Object> buildResponseMap(MonetaryException exception){
+    HashMap<String, Object> result = new HashMap<>();
+    result.put("code", exception.getErrorCode());
+    result.put("message", exception.getMessage());
+    return result;
   }
 
   private HashMap<String, Object> buildResponseMap(Transaction transaction, MonetaryAmount balance){

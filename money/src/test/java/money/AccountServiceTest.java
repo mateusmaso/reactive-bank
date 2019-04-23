@@ -51,7 +51,7 @@ public class AccountServiceTest {
   }
 
   @Test
-	public void itShouldGetBalance() {
+  public void itShouldGetBalance() {
     Account accountMock = createUsdAccountMock("abc123", BigDecimal.TEN);
     MonetaryAmount balance = accountService.getBalance(accountMock.getId()).join();
 
@@ -60,7 +60,7 @@ public class AccountServiceTest {
   }
 
   @Test
-	public void itShouldLoadAccount() {
+  public void itShouldLoadAccount() {
     Account accountMock = createUsdAccountMock("abc123", BigDecimal.ZERO);
     createUsdAccountMock(Account.OPERATIONAL_ID, BigDecimal.ZERO);
     stubCreateTransaction();
@@ -77,7 +77,7 @@ public class AccountServiceTest {
   }
 
   @Test
-	public void itShouldUnloadAccountIfHasBalance() {
+  public void itShouldUnloadAccountIfHasBalance() {
     Account accountMock = createUsdAccountMock("abc123", BigDecimal.TEN);
     createUsdAccountMock(Account.OPERATIONAL_ID, BigDecimal.ZERO);
     stubCreateTransaction();
@@ -94,7 +94,7 @@ public class AccountServiceTest {
   }
 
   @Test
-	public void itShouldNotUnloadAccountIfDoesNotHaveBalance() {
+  public void itShouldNotUnloadAccountIfDoesNotHaveBalance() {
     Account accountMock = createUsdAccountMock("abc123", BigDecimal.ZERO);
     createUsdAccountMock(Account.OPERATIONAL_ID, BigDecimal.ZERO);
     stubCreateTransaction();
@@ -111,7 +111,7 @@ public class AccountServiceTest {
   }
 
   @Test
-	public void itShouldTransferBetweenAccountsIfHasBalance() {
+  public void itShouldTransferBetweenAccountsIfHasBalance() {
     Account accountMock1 = createUsdAccountMock("abc123", BigDecimal.TEN);
     Account accountMock2 = createUsdAccountMock("abc321", BigDecimal.ZERO);
     stubCreateTransaction();
@@ -131,7 +131,7 @@ public class AccountServiceTest {
   }
 
   @Test
-	public void itShouldNotTransferBetweenAccountsIfDoesNotHaveBalance() {
+  public void itShouldNotTransferBetweenAccountsIfDoesNotHaveBalance() {
     Account accountMock1 = createUsdAccountMock("abc123", BigDecimal.ONE);
     Account accountMock2 = createUsdAccountMock("abc321", BigDecimal.ZERO);
     stubCreateTransaction();
