@@ -11,7 +11,7 @@ This is a proposal of a bank API written using reactive programming and concurre
 - Handled debit account operations with a single Java `synchronized` for locking to avoid deadlocks.
 - Used `TDD` with `JUnit` and `Mockito` for unit and integration tests.
 
-[API Specification](DOCUMENTATION.md)
+## [API](DOCUMENTATION.md)
 
 | Method | Resource                                 | Description                                         |
 | ------ | ---------------------------------------- | --------------------------------------------------- |
