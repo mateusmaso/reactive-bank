@@ -35,9 +35,9 @@ public class InMemoryTransactionRepositoryTest {
     when(accountMock.getCurrency()).thenReturn(Currency.getInstance("USD"));
 
     List<TransactionEntry> transactionEntries = new ArrayList<>();
-    transactionEntries.add(TransactionEntry.credit(accountMock, new MonetaryAmount(Currency.getInstance("USD"), BigDecimal.TEN)));
-    transactionEntries.add(TransactionEntry.credit(accountMock, new MonetaryAmount(Currency.getInstance("USD"), BigDecimal.TEN)));
-    transactionEntries.add(TransactionEntry.debit(accountMock, new MonetaryAmount(Currency.getInstance("USD"), BigDecimal.TEN)));
+    transactionEntries.add(TransactionEntry.credit(accountMock, MonetaryAmount.usd(BigDecimal.TEN)));
+    transactionEntries.add(TransactionEntry.credit(accountMock, MonetaryAmount.usd(BigDecimal.TEN)));
+    transactionEntries.add(TransactionEntry.debit(accountMock, MonetaryAmount.usd(BigDecimal.TEN)));
     
     Map<String, List<TransactionEntry>> transactionEntriesByAccountId = new HashMap<>();
     transactionEntriesByAccountId.put(accountMock.getId(), transactionEntries);

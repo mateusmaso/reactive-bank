@@ -20,6 +20,10 @@ public class MonetaryAmount {
       .orElseThrow(() -> new RuntimeException("Amount must be present"));
   }
 
+  public static MonetaryAmount usd(BigDecimal amount) {
+    return new MonetaryAmount(Currency.getInstance("USD"), amount);
+  }
+
   public Currency getCurrency() {
     return this.currency;
   }

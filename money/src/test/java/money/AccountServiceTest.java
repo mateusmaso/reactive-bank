@@ -67,7 +67,7 @@ public class AccountServiceTest {
 
     accountService.load(
       accountMock.getId(), 
-      new MonetaryAmount(Currency.getInstance("USD"), BigDecimal.TEN)
+      MonetaryAmount.usd(BigDecimal.TEN)
     ).join();
 
     verify(transactionRepositoryMock).create(argThat((transaction) -> {
@@ -84,7 +84,7 @@ public class AccountServiceTest {
 
     accountService.unload(
       accountMock.getId(), 
-      new MonetaryAmount(Currency.getInstance("USD"), BigDecimal.TEN)
+      MonetaryAmount.usd(BigDecimal.TEN)
     ).join();
 
     verify(transactionRepositoryMock).create(argThat((transaction) -> {
@@ -101,7 +101,7 @@ public class AccountServiceTest {
 
     accountService.unload(
       accountMock.getId(), 
-      new MonetaryAmount(Currency.getInstance("USD"), BigDecimal.TEN)
+      MonetaryAmount.usd(BigDecimal.TEN)
     ).whenComplete(
       (result, exception) -> {
         assertNotNull(exception);
@@ -119,7 +119,7 @@ public class AccountServiceTest {
     accountService.transfer(
       accountMock1.getId(), 
       accountMock2.getId(), 
-      new MonetaryAmount(Currency.getInstance("USD"), BigDecimal.TEN)
+      MonetaryAmount.usd(BigDecimal.TEN)
     );
 
     verify(transactionRepositoryMock).create(argThat((transaction) -> {
@@ -139,7 +139,7 @@ public class AccountServiceTest {
     accountService.transfer(
       accountMock1.getId(), 
       accountMock2.getId(), 
-      new MonetaryAmount(Currency.getInstance("USD"), BigDecimal.TEN)
+      MonetaryAmount.usd(BigDecimal.TEN)
     ).whenComplete(
       (result, exception) -> {
         assertNotNull(exception);
@@ -156,7 +156,7 @@ public class AccountServiceTest {
     );
 
     when(transactionRepositoryMock.sumBalance(accountMock)).thenReturn(
-      CompletableFuture.completedFuture(new MonetaryAmount(Currency.getInstance("USD"), BigDecimal.TEN))
+      CompletableFuture.completedFuture(MonetaryAmount.usd(BigDecimal.TEN))
     );
 
     return accountMock;

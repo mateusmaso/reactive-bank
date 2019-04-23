@@ -56,7 +56,7 @@ public class InMemoryStoreTest {
 	public void itShouldGetTransactionEntriesByAccountIdWhenInserted() {
     Account debitAccount = new Account("123", Currency.getInstance("USD"));
     Account creditAccount = new Account("321", Currency.getInstance("USD"));
-    MonetaryAmount amount = new MonetaryAmount(Currency.getInstance("USD"), BigDecimal.TEN);
+    MonetaryAmount amount = MonetaryAmount.usd(BigDecimal.TEN);
 
     Transaction transaction = new Transaction(
       "abc123", 
