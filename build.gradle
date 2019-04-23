@@ -13,7 +13,7 @@ dependencies {
   compile "org.slf4j:slf4j-simple:1.7.21"
   compile "io.javalin:javalin:2.8.0"
   compile "com.fasterxml.jackson.core:jackson-databind:2.0.1"
-  compile project(":money")
+  compile project(":money-inmemory")
 
   testCompile "junit:junit:4.12"
   testCompile "com.konghq:unirest-java:2.2.00"
