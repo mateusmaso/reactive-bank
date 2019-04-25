@@ -3,10 +3,13 @@ package com.mateusmaso.reactive.bank;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.math.BigDecimal;
 import java.util.Currency;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 
@@ -17,7 +20,6 @@ import money.MonetaryAmount;
 import money.account.Account;
 import money.account.AccountOperation;
 import money.account.AccountService;
-import money.exceptions.InsufficientFundsException;
 import money.transaction.Transaction;
 import money.transaction.TransactionRepository;
 import money.inmemory.*;
@@ -27,26 +29,27 @@ public class ConcurrencyTest {
   private InMemoryStore store;
   private InMemoryAccountOperation accountOperation;
   private InMemoryAccountRepository accountRepository;
-  private VerySlowInMemoryTransactionRepository transactionRepository;
+  private InMemoryTransactionRepositoryWithBreakpoint transactionRepository;
 
-  class VerySlowInMemoryTransactionRepository extends InMemoryTransactionRepository {
-    private Integer waitTime;
+  class InMemoryTransactionRepositoryWithBreakpoint extends InMemoryTransactionRepository {
+    private CountDownLatch latch;
 
-    public VerySlowInMemoryTransactionRepository(InMemoryStore store, Integer waitTime) {
+    public InMemoryTransactionRepositoryWithBreakpoint(InMemoryStore store) {
       super(store);
-      this.waitTime = 0;
     }
 
-    public void setWaitTime(Integer waitTime) {
-      this.waitTime = waitTime;
+    public void setLatch(CountDownLatch latch) {
+      this.latch = latch;
     }
 
     @Override
     public CompletableFuture<Transaction> create(Transaction transaction) {
-      try {
-        TimeUnit.SECONDS.sleep(this.waitTime);
-      } catch(InterruptedException e) { }
-      
+      if (this.latch != null) {
+        try {
+          this.latch.await();
+        } catch(InterruptedException e) { throw new RuntimeException("Error"); }  
+      }
+
       return super.create(transaction);
     }
   }
@@ -63,54 +66,39 @@ public class ConcurrencyTest {
     this.store = new InMemoryStore();
     this.accountOperation = new InMemoryAccountOperation();
     this.accountRepository = new InMemoryAccountRepository(store);
-    this.transactionRepository = new VerySlowInMemoryTransactionRepository(store, 0);
+    this.transactionRepository = new InMemoryTransactionRepositoryWithBreakpoint(store);
     this.accountService = new AccountService(this.accountOperation, this.accountRepository, this.transactionRepository);
   }
 
   @Test
-  public void itShouldNotInsertTwoTransferTransactionsWhenThereIsConcurrencyControl() throws InterruptedException {
+  public void itShouldInsertOneTransferTransactionsWhenThereIsConcurrencyControl() throws InterruptedException {
     Account fromAccount = this.accountService.createAccount(Currency.getInstance("USD")).join();
     Account toAccount = this.accountService.createAccount(Currency.getInstance("USD")).join();
 
     this.accountService.load(fromAccount.getId(), MonetaryAmount.usd(BigDecimal.TEN)).join();
 
+    CountDownLatch latch = new CountDownLatch(1);
+    this.transactionRepository.setLatch(latch);
+    
     Thread t1 = new Thread(new Runnable() {
       public void run() {
-        transactionRepository.setWaitTime(5);
-        accountService
-          .transfer(fromAccount.getId(), toAccount.getId(), MonetaryAmount.usd(BigDecimal.TEN))
-          .whenComplete(
-            (result, exception) -> {
-              assertNull(exception);
-              assertNotNull(result);
-            }
-          );
+        accountService.transfer(fromAccount.getId(), toAccount.getId(), MonetaryAmount.usd(BigDecimal.TEN)).join();
+      }
+    });
+
+    Thread t2 = new Thread(new Runnable() {
+      public void run() {
+        accountService.transfer(fromAccount.getId(), toAccount.getId(), MonetaryAmount.usd(BigDecimal.TEN)).join();
       }
     });
 
     t1.start();
-
-    Thread t2 = new Thread(new Runnable() {
-      public void run() {
-        transactionRepository.setWaitTime(0);
-        accountService
-          .transfer(fromAccount.getId(), toAccount.getId(), MonetaryAmount.usd(BigDecimal.TEN))
-          .whenComplete(
-            (result, exception) -> {
-              assertNotNull(exception);
-              assertEquals(InsufficientFundsException.class, exception.getClass());
-            }
-          );
-      }
-    });
-
     t2.start();
-    TimeUnit.SECONDS.sleep(2);
+    latch.countDown();
+    t1.join();
+    t2.join();
 
-    assertEquals(
-      2, 
-      this.store.getTransactionEntriesByAccountId().get(fromAccount.getId()).size()
-    );
+    assertEquals(2, this.store.getTransactionEntriesByAccountId().get(fromAccount.getId()).size());
   }
 
   @Test
@@ -122,42 +110,27 @@ public class ConcurrencyTest {
 
     this.accountService.load(fromAccount.getId(), MonetaryAmount.usd(BigDecimal.TEN)).join();
 
+    CountDownLatch latch = new CountDownLatch(1);
+    this.transactionRepository.setLatch(latch);
+    
     Thread t1 = new Thread(new Runnable() {
       public void run() {
-        transactionRepository.setWaitTime(5);
-        accountService
-          .transfer(fromAccount.getId(), toAccount.getId(), MonetaryAmount.usd(BigDecimal.TEN))
-          .whenComplete(
-            (result, exception) -> {
-              assertNull(exception);
-              assertNotNull(result);
-            }
-          );
+        accountService.transfer(fromAccount.getId(), toAccount.getId(), MonetaryAmount.usd(BigDecimal.TEN)).join();
+      }
+    });
+
+    Thread t2 = new Thread(new Runnable() {
+      public void run() {
+        accountService.transfer(fromAccount.getId(), toAccount.getId(), MonetaryAmount.usd(BigDecimal.TEN)).join();
       }
     });
 
     t1.start();
-
-    Thread t2 = new Thread(new Runnable() {
-      public void run() {
-        transactionRepository.setWaitTime(0);
-        accountService
-          .transfer(fromAccount.getId(), toAccount.getId(), MonetaryAmount.usd(BigDecimal.TEN))
-          .whenComplete(
-            (result, exception) -> {
-              assertNull(exception);
-              assertNotNull(result);
-            }
-          );
-      }
-    });
-
     t2.start();
-    TimeUnit.SECONDS.sleep(2);
+    latch.countDown();
+    t1.join();
+    t2.join();
 
-    assertEquals(
-      3, 
-      this.store.getTransactionEntriesByAccountId().get(fromAccount.getId()).size()
-    );
+    assertEquals(3, this.store.getTransactionEntriesByAccountId().get(fromAccount.getId()).size());
   }
 }
