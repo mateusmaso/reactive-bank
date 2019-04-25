@@ -1,15 +1,18 @@
 # reactive-bank
 
-This is a proposal of a bank API written using reactive programming and concurrent operations in memory. It exposes a web interface to the external world and handles multiple requests concurrently. Bear in mind that this project was not meant to be ran in a distributed environment since it's data is kept locally without persistance after killing the process.
+Keep in mind to follow these principles before contribute:
 
-- Used an in-memory data store. (will not work in distributed systems)
-- Chose atomic data models with append-only structures to avoid dealing with `ACID` transactions.
-- Wrote in Java 8 using `Streams` and immutable objects for composability and thread safety.
-- Chose to use async request handling with `Javalin` and `ComputableFuture` to allow more web concurrency.
-- Designed based on onion/hexagonal architecture. (core domain and infra classes are separeted)
-- Followed `SOLID` principles such as dependency injection and inversion.
-- Handled debit account operations with a single Java `synchronized` for locking to avoid deadlocks.
-- Used `TDD` with `JUnit` and `Mockito` for unit and integration tests.
+- Try to solve the problems with a modern approach.
+- Java (11 or higher) or any programming language equivalent. (eg: Scala, Elixir)
+- Use architecture to protect the business rules from the technology layer. (eg: hexagonal/clean/onion)
+- Every domain should be a module using the [microservices principles](https://martinfowler.com/articles/microservices.html).
+- Think how to solve the problems asynchronously without locking.
+- Use the principles of reactive programming such as:
+  - Message-driven.
+  - Responsive.
+  - Elastic.
+  - Resilient.
+- Easy setup using `docker-compose up` in the root project to run all microservices.
 
 ## [API](API.md)
 
