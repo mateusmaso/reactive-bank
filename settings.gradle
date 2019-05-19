@@ -1,3 +1,0 @@
-rootProject.name = "reactive-bank"
-include 'money'
-include 'money-inmemory'
