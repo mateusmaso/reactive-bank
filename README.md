@@ -1,18 +1,8 @@
 # reactive-bank
 
-Keep in mind to follow these principles before contribute:
+This is a modern implementation of a banking API based on the [reactive manifesto](https://www.reactivemanifesto.org) and [microservices architecture](https://martinfowler.com/articles/microservices.html). Currently, these are the following services available:
 
-- Try to solve the problems with a modern approach.
-- Java (11 or higher) or any programming language equivalent. (eg: Scala, Elixir)
-- Use architecture to protect the business rules from the technology layer. (eg: hexagonal/clean/onion)
-- Every domain should be a module using the [microservices principles](https://martinfowler.com/articles/microservices.html).
-- Think how to solve the problems asynchronously without locking.
-- Use the principles of reactive programming such as:
-  - Message-driven.
-  - Responsive.
-  - Elastic.
-  - Resilient.
-- Easy setup using `docker-compose up` in the root project to run all microservices.
+- [Money](/money): Holds balance and transactions of the general ledger.
 
 ## [API](API.md)
 
@@ -24,22 +14,24 @@ Keep in mind to follow these principles before contribute:
 | POST   | /load                                    | Load money into the account                         |
 | POST   | /unload                                  | Unload money from the account                       |
 
-## Installing
+## Running
 
 ```sh
-$ ./gradlew build
+$ make run
 ```
 
-## Running API
+## Contributing
 
-```sh
-$ ./gradlew run
-```
+Keep in mind to follow these principles before contributing:
 
-> Default port `8080`
-
-## Testing
-
-```sh
-$ ./gradlew test
-```
+- Try to solve the problems with a modern approach.
+- Choose any programming language although JVM is preferred. (eg: Java, Scala, Clojure)
+- Protect the business rules from the technology layer. (eg: hexagonal/clean/onion)
+- Every domain should be a module using the [microservices principles](https://martinfowler.com/articles/microservices.html).
+- Think how to solve the problems asynchronously.
+- Use the principles of reactive programming such as:
+  - Message-driven.
+  - Responsive.
+  - Elastic.
+  - Resilient.
+- Easy setup in the root project that runs all microservices.
