@@ -9,11 +9,16 @@ import java.net.ServerSocket;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.eclipse.jetty.server.handler.StatisticsHandler;
+import org.eclipse.jetty.util.thread.QueuedThreadPool;
 import org.json.JSONObject;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import io.micrometer.prometheus.PrometheusConfig;
+import io.micrometer.prometheus.PrometheusMeterRegistry;
+import io.prometheus.client.CollectorRegistry;
 import kong.unirest.HttpResponse;
 import kong.unirest.JsonNode;
 import kong.unirest.ObjectMapper;
@@ -27,18 +32,22 @@ public class TransfersApiTest {
   private WebServer webServer;
   private Integer port;
   private String apiBaseUrl;
+  private PrometheusMeterRegistry registry = new PrometheusMeterRegistry(PrometheusConfig.DEFAULT);
+  private QueuedThreadPool queuedThreadPool = new QueuedThreadPool(200, 8, 60_000);
+  private StatisticsHandler statisticsHandler = new StatisticsHandler();
 
   @Before
   public void setUp() throws IOException {
     this.port = this.findRandomOpenPort();
     this.apiBaseUrl = "http://localhost:" + this.port;
-    this.webServer = new WebServer();
+    this.webServer = new WebServer(queuedThreadPool, statisticsHandler, registry);
     this.webServer.start(this.port);
     configUnirest();  
   }
 
   @After
   public void tearDown() {
+    CollectorRegistry.defaultRegistry.clear();
     this.webServer.stop();
   }
 

@@ -17,7 +17,7 @@ This is a modern implementation of a banking API based on the [reactive manifest
 ## Running
 
 ```sh
-$ make run
+$ docker-compose up
 ```
 
 ## Contributing

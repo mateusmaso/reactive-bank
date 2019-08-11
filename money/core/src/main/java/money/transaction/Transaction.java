@@ -36,6 +36,10 @@ public class Transaction {
     return this.id;
   }
 
+  public TransactionType getType() {
+    return this.type;
+  }
+
   public boolean isTransfer() {
     return this.type.equals(TransactionType.TRANSFER);
   }

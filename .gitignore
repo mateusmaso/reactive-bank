@@ -1,8 +1,7 @@
 ### Commons ###
 out
 tmp
-!bin
-*/bin
+bin
 bin/main
 bin/test
 hs_err_pid*.log
@@ -23,3 +22,5 @@ build/
 
 ### Editor ###
 .vscode
+
+.docker

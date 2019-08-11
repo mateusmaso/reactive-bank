@@ -1,0 +1,10 @@
+scrape_configs:
+  - job_name: 'prometheus'
+    scrape_interval: 5s
+    static_configs:
+      - targets: ['localhost:9090']
+  - job_name: 'money'
+    metrics_path: '/prometheus'
+    scrape_interval: 1s
+    static_configs:
+      - targets: ['money:8080']

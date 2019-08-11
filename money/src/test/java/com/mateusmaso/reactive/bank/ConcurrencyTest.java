@@ -1,16 +1,11 @@
 package com.mateusmaso.reactive.bank;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 import java.math.BigDecimal;
 import java.util.Currency;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 
 import org.junit.Before;
@@ -21,7 +16,6 @@ import money.account.Account;
 import money.account.AccountOperation;
 import money.account.AccountService;
 import money.transaction.Transaction;
-import money.transaction.TransactionRepository;
 import money.inmemory.*;
 
 public class ConcurrencyTest {

@@ -22,33 +22,50 @@ import java.util.concurrent.CompletionException;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mateusmaso.reactive.bank.prometheus.StatisticsHandlerCollector;
 
+import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.server.handler.StatisticsHandler;
+import org.eclipse.jetty.util.thread.QueuedThreadPool;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import io.javalin.Javalin;
+import io.micrometer.prometheus.PrometheusMeterRegistry;
 
 public class WebServer {
   private AccountService accountService;
-  private Logger logger;
+  private Logger log;
   private Javalin app;
   private boolean started;
+  private StatisticsHandlerCollector statisticsHandlerCollector;
 
-  public WebServer() {
+  public WebServer(QueuedThreadPool queuedThreadPool, StatisticsHandler statisticsHandler, PrometheusMeterRegistry registry) {
     InMemoryStore store = new InMemoryStore();
     InMemoryAccountOperation accountOperation = new InMemoryAccountOperation();
     InMemoryAccountRepository accountRepository = new InMemoryAccountRepository(store);
     InMemoryTransactionRepository transactionRepository = new InMemoryTransactionRepository(store);
+    
+    this.statisticsHandlerCollector = new StatisticsHandlerCollector(statisticsHandler);
+    this.statisticsHandlerCollector.register();
 
     this.accountService = new AccountService(accountOperation, accountRepository, transactionRepository);
-    this.logger = LoggerFactory.getLogger(WebServer.class);
+    this.log = LoggerFactory.getLogger(WebServer.class);
     this.app = Javalin.create();
+    this.app.server(() -> {
+      Server server = new Server(queuedThreadPool);
+      server.setHandler(statisticsHandler);
+      return server;
+    });
+
+    this.app.get("/prometheus", ctx -> ctx.result(registry.scrape()));
+    this.app.enableMicrometer();
     this.started = false;
   }
 
   public void start(Integer port) {    
     if (!this.started) {
-      logger.info("Web server started on port " + port);
+      log.info("Web server started on port " + port);
       this.app.start(port);
       this.started = true;
       handleTransfers();
@@ -86,7 +103,7 @@ public class WebServer {
   private void handleTransfers() {
     this.app.post("/transfers", ctx -> {
       Map<String, Object> payload = jsonToData(ctx.body());
-      this.logger.info(dataToJson(payload));
+      this.log.info(dataToJson(payload));
 
       String fromAccountId = (String) payload.get("fromAccountId");
       String toAccountId = (String) payload.get("toAccountId");
@@ -110,7 +127,7 @@ public class WebServer {
   private void handleAccounts() {
     this.app.post("/accounts", ctx -> {
       Map<String, Object> payload = jsonToData(ctx.body());
-      this.logger.info(dataToJson(payload));
+      this.log.info(dataToJson(payload));
 
       String currency = (String) payload.get("currency");
 
@@ -139,7 +156,7 @@ public class WebServer {
   private void handleLoad() {
     this.app.post("/load", ctx -> {
       Map<String, Object> payload = jsonToData(ctx.body());
-      this.logger.info(dataToJson(payload));
+      this.log.info(dataToJson(payload));
 
       String accountId = (String) payload.get("accountId");
       MonetaryAmount amount = new MonetaryAmount(
@@ -162,7 +179,7 @@ public class WebServer {
   private void handleUnload() {
     this.app.post("/unload", ctx -> {
       Map<String, Object> payload = jsonToData(ctx.body());
-      this.logger.info(dataToJson(payload));
+      this.log.info(dataToJson(payload));
 
       String accountId = (String) payload.get("accountId");
       MonetaryAmount amount = new MonetaryAmount(

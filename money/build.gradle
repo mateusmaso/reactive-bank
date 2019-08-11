@@ -1,6 +1,7 @@
 plugins {
   id 'java'
   id 'application'
+  id "com.github.johnrengelman.shadow" version "5.1.0"
 }
 
 mainClassName = 'com.mateusmaso.reactive.bank.Application'
@@ -14,6 +15,10 @@ dependencies {
   compile "io.javalin:javalin:2.8.0"
   compile "com.fasterxml.jackson.core:jackson-databind:2.0.1"
   compile project(":inmemory")
+  
+  compile "io.micrometer:micrometer-core:1.1.0"
+  compile "io.micrometer:micrometer-registry-prometheus:1.0.6"
+  compile "io.prometheus:simpleclient_httpserver:0.1.0"
 
   testCompile "junit:junit:4.12"
   testCompile "com.konghq:unirest-java:2.2.00"
@@ -24,4 +29,19 @@ java {
   version = '1.0'
   sourceCompatibility = JavaVersion.VERSION_1_8
   targetCompatibility = JavaVersion.VERSION_1_8
+}
+
+jar {
+  manifest {
+    attributes(
+      'Class-Path': configurations.compile.collect { it.getName() }.join(' '),
+      'Main-Class': mainClassName
+    )
+  }
+  baseName = project.name + '-slim'
+}
+
+shadowJar {
+  mainClassName = mainClassName
+  zip64 true
 }
